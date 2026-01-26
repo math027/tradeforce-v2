@@ -88,6 +88,11 @@ document.addEventListener('DOMContentLoaded', function() {
         updateWeekHeader();
     });
 
+    document.getElementById('btnTogglePromoters').addEventListener('click', () => {
+        const panel = document.querySelector('.promoters-panel');
+        panel.classList.toggle('collapsed');
+    });
+
     // --- CORE FUNCTIONS ---
 
     function selectPromoter(id) {
