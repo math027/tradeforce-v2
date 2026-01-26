@@ -1,0 +1,451 @@
+:root {
+    /* Paleta de Cores baseada no layout SGC */
+    --sidebar-bg: #111827;
+    --sidebar-text: #9ca3af;
+    --sidebar-active: #2563eb;
+    --bg-body: #f3f4f6;
+    --text-dark: #1f2937;
+    --text-light: #6b7280;
+    --white: #ffffff;
+    
+    /* Status Colors */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-body);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* --- Sidebar --- */
+aside {
+    width: 260px;
+    background-color: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    color: var(--white);
+    flex-shrink: 0;
+}
+
+.brand {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand span { color: var(--sidebar-active); }
+
+.user-profile-mini {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 10px; /* Ajustei para alinhar com o padding-left dos links */
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 20px;
+    overflow: hidden; /* Garante que o texto não vaze */
+    white-space: nowrap; /* Mantém texto em linha única */
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    
+    /* --- ADICIONE ESTAS 3 LINHAS --- */
+    min-width: 40px;  /* Garante que nunca fique menor que 40px */
+    min-height: 40px; /* Garante a altura */
+    flex-shrink: 0;   /* Impede que o flexbox "esprema" a imagem */
+    /* -------------------------------- */
+    
+    background-image: url('https://i.pravatar.cc/150?img=11');
+    background-size: cover;
+    border-radius: 50%;
+    border: 2px solid var(--sidebar-active);
+}
+
+.user-info h4 { font-size: 14px; font-weight: 600; }
+.user-info p { font-size: 12px; color: var(--success); display: flex; align-items: center; gap: 4px; }
+.dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; display: inline-block; }
+
+nav ul { list-style: none; }
+
+nav li { margin-bottom: 8px; }
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: var(--sidebar-text);
+    border-radius: 8px;
+    transition: all 0.3s;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.nav-link i { margin-right: 12px; width: 20px; text-align: center; }
+
+.nav-link:hover { background-color: rgba(255,255,255,0.05); color: var(--white); }
+
+.nav-link.active {
+    background-color: var(--sidebar-active);
+    color: var(--white);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+
+.nav-category {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #4b5563;
+    margin: 20px 0 10px 10px;
+    font-weight: 700;
+}
+
+/* --- Main Content --- */
+main {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+header h2 { font-size: 24px; color: var(--text-dark); font-weight: 700; }
+header p { color: var(--text-light); font-size: 14px; }
+
+.header-actions { display: flex; gap: 15px; }
+
+.btn-icon {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: var(--white);
+    color: var(--text-light);
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+}
+
+.btn-primary {
+    background-color: var(--sidebar-active);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+}
+
+/* --- Cards Section --- */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+/* Atualize a classe .card existente para incluir a transition */
+.card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.02);
+    
+    /* Adicionado para animação */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+/* Adicione esta nova regra para o efeito hover */
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+}
+
+.card.blue-border { border-left: 4px solid var(--info); }
+.card.orange-border { border-left: 4px solid var(--warning); }
+.card.green-border { border-left: 4px solid var(--success); }
+.card.red-border { border-left: 4px solid var(--danger); }
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.card-title { font-size: 12px; color: var(--text-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.card-icon {
+    width: 35px; height: 35px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+}
+.bg-blue-light { background: #eff6ff; color: var(--info); }
+.bg-orange-light { background: #fff7ed; color: var(--warning); }
+.bg-green-light { background: #ecfdf5; color: var(--success); }
+.bg-red-light { background: #fef2f2; color: var(--danger); }
+
+.card-value { font-size: 28px; font-weight: 700; color: var(--text-dark); margin-bottom: 5px; }
+.card-stat { font-size: 13px; font-weight: 500; }
+.stat-up { color: var(--success); }
+.stat-down { color: var(--danger); }
+
+/* --- Charts & Lists Section --- */
+.content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.section-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.section-title { font-size: 16px; font-weight: 700; color: var(--text-dark); }
+.link-action { color: var(--sidebar-active); text-decoration: none; font-size: 13px; font-weight: 500; }
+
+/* Lista de Atividades */
+.activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f3f4f6;
+}
+.activity-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+.activity-avatar {
+    width: 40px; height: 40px;
+    background: #e5e7eb;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600;
+    color: #4b5563;
+    font-size: 14px;
+}
+.activity-avatar.small { width: 24px; height: 24px; font-size: 10px; }
+
+.activity-info h5 { font-size: 14px; color: var(--text-dark); margin-bottom: 2px; }
+.activity-info p { font-size: 12px; color: var(--text-light); }
+.activity-time { margin-left: auto; font-size: 12px; color: var(--text-light); }
+
+.load-more-btn {
+    width: 100%; padding: 10px; margin-top: 20px; 
+    background: transparent; border: 1px solid #e5e7eb; 
+    border-radius: 8px; color: #6b7280; cursor: pointer;
+}
+
+/* Tabela de Roteiros */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.search-input {
+    padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 13px;
+}
+
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 12px; color: var(--text-light); text-transform: uppercase; padding: 12px 10px; font-weight: 600; border-bottom: 1px solid #e5e7eb; }
+td { padding: 14px 10px; font-size: 14px; color: var(--text-dark); border-bottom: 1px solid #f9fafb; }
+
+.promoter-cell { display: flex; align-items: center; gap: 10px; }
+.action-cell { color: var(--sidebar-active); cursor: pointer; }
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+.status-done { background: #ecfdf5; color: #059669; }
+.status-pending { background: #fff7ed; color: #d97706; }
+.status-late { background: #fef2f2; color: #dc2626; }
+
+/* Media Queries */
+@media (max-width: 1200px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .content-grid { grid-template-columns: 1fr; }
+}
+
+/* --- Estilos do Toggle e Animações da Sidebar --- */
+
+/* 1. Ajustes na Sidebar Base */
+/* --- Sidebar Base --- */
+aside {
+    width: 260px;
+    background-color: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 15px; /* Padding reduzido nas laterais */
+    color: var(--white);
+    flex-shrink: 0;
+    transition: width 0.3s ease; /* Animação só na largura */
+    white-space: nowrap; /* Impede texto de quebrar linha */
+    overflow: hidden;
+}
+
+/* --- Botão Hamburger e Header --- */
+.brand {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    margin-bottom: 30px;
+    gap: 12px;
+}
+
+.btn-menu {
+    background: transparent;
+    border: none;
+    color: var(--sidebar-text);
+    font-size: 18px;
+    cursor: pointer;
+    /* Tamanho fixo para o botão alinhar com os ícones de baixo */
+    min-width: 40px; 
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+.btn-menu:hover { background: rgba(255,255,255,0.1); color: var(--white); }
+
+.brand-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: opacity 0.2s;
+}
+.brand span { color: var(--sidebar-active); font-weight: 700; font-size: 20px; }
+.brand-icon { font-size: 20px; color: var(--white); }
+
+
+/* --- Links de Navegação (O Segredo da Fixação) --- */
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 0; /* Remove padding lateral do link */
+    padding-left: 10px; /* Padding fixo esquerdo */
+    color: var(--sidebar-text);
+    border-radius: 8px;
+    transition: 0.3s;
+    text-decoration: none;
+    height: 45px; /* Altura fixa */
+    overflow: hidden;
+}
+
+.nav-link i {
+    /* O ícone tem largura fixa e nunca muda */
+    min-width: 30px; 
+    text-align: center;
+    margin-right: 10px; /* Espaço fixo entre ícone e texto */
+    font-size: 16px;
+}
+
+.link-text {
+    opacity: 1;
+    transition: opacity 0.2s;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Categorias */
+.nav-category {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #4b5563;
+    margin: 20px 0 10px 10px;
+    font-weight: 700;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+}
+
+/* Perfil */
+.user-profile-mini {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 5px; /* Ajuste para alinhar */
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.user-info { transition: opacity 0.2s; }
+
+
+/* --- ESTADO FECHADO (COLLAPSED) --- */
+
+/* 1. Largura diminui */
+body.sidebar-collapsed aside {
+    width: 80px; /* Largura suficiente apenas para os ícones */
+}
+
+/* 2. Ocultar Textos (Opacidade 0 para sumir suave) */
+body.sidebar-collapsed .link-text,
+body.sidebar-collapsed .brand-content,
+body.sidebar-collapsed .nav-category,
+body.sidebar-collapsed .user-info {
+    opacity: 0;
+    pointer-events: none; /* Impede clique no que está invisível */
+    visibility: hidden; /* Garante que screen readers ignorem */
+    transition: opacity 0.1s; /* Some rápido */
+}
+
+/* 3. Ajustes Específicos */
+body.sidebar-collapsed .user-profile-mini {
+    justify-content: flex-start; /* Mantém alinhado à esquerda */
+    padding-left: 5px; /* Mantém alinhamento com ícones */
+}
+
+/* IMPORTANTE: Não usamos justify-content: center.
+   Mantemos tudo alinhado à esquerda e a redução da largura
+   corta visualmente o texto. */

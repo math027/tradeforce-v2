@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TradeForce | Login</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Cores extraídas do Dashboard TradeForce */
+      --primary: #2563eb;       /* Azul do botão 'Novo Roteiro' */
+      --primary-hover: #1d4ed8;
+      --sidebar-bg: #111827;    /* Cor da sidebar do dashboard */
+      --bg-color: #f3f4f6;      /* Fundo geral */
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --danger: #ef4444;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Container Principal - Estilo Split (Lado a Lado) */
+    .main-wrapper {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: 45% 55%;
+      background: var(--white);
+      overflow: hidden;
+    }
+
+    /* Lado Esquerdo - Branding (Simula a Sidebar do Dashboard) */
+    .brand-side {
+      background-color: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: var(--white);
+      padding: 40px;
+      position: relative;
+    }
+
+    .brand-content {
+      max-width: 400px;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--primary);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+    }
+
+    .logo-text {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-desc {
+      color: #9ca3af;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* Decoração de fundo sutil */
+    .bg-pattern {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0);
+      background-size: 24px 24px;
+      z-index: 1;
+    }
+
+    /* Lado Direito - Formulário */
+    .login-side {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      background: var(--white);
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .header-box {
+      margin-bottom: 32px;
+    }
+
+    .header-box h2 {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .header-box p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* Inputs e Labels */
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 15px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #f9fafb;
+      transition: all 0.2s;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    /* Botão Principal */
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .forgot-link {
+      display: block;
+      text-align: center;
+      margin-top: 16px;
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* Avisos e Mobile */
+    .offline-alert {
+      margin-top: 20px;
+      background-color: #fef2f2;
+      border: 1px solid #fee2e2;
+      color: var(--danger);
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: none;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .mobile-app-download {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      display: none; /* Só aparece no mobile */
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      border: 2px dashed var(--border);
+      color: var(--text-muted);
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .btn-download:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: #f0f9ff;
+    }
+
+    /* Responsividade */
+    @media (max-width: 900px) {
+      .main-wrapper {
+        grid-template-columns: 1fr;
+      }
+      
+      .brand-side {
+        display: none; /* Esconde o lado "branding" em telas menores */
+      }
+
+      .mobile-app-download {
+        display: block; /* Mostra download apenas no mobile */
+      }
+      
+      .login-side {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-wrapper">
+    
+    <div class="brand-side">
+      <div class="bg-pattern"></div>
+      <div class="brand-content">
+        <div class="logo-area">
+          <div class="logo-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="logo-text">TradeForce</div>
+        </div>
+        <div class="brand-desc">
+          <p>Plataforma inteligente para gestão de Trade Marketing.</p>
+          <p style="margin-top: 10px; font-size: 14px; opacity: 0.7;">
+            Acompanhe visitas, roteiros e performance em tempo real.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-side">
+      <div class="login-box">
+        
+        <div style="text-align: center; margin-bottom: 24px; display: none;" id="mobileLogo">
+          <h1 style="color: var(--primary); font-weight: 800;">TradeForce</h1>
+        </div>
+
+        <div class="header-box">
+          <h2>Bem-vindo de volta</h2>
+          <p>Insira suas credenciais para acessar o painel.</p>
+        </div>
+
+        <div class="input-group">
+          <label for="email">E-mail Corporativo</label>
+          <input type="email" id="email" placeholder="nome@empresa.com.br" />
+        </div>
+
+        <div class="input-group">
+          <label for="password">Senha</label>
+          <input type="password" id="password" placeholder="••••••••" />
+        </div>
+
+        <button class="btn-primary" onclick="handleLogin()">
+          Acessar Plataforma
+        </button>
+
+        <a class="forgot-link">Esqueceu sua senha?</a>
+
+        <div id="offlineWarning" class="offline-alert" style="display: none;">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 1l22 22M16.72 11.06A10.94 10.94 0 0119 12.55M5 12.55a10.94 10.94 0 015.17-2.39m5.17 2.39a10.94 10.94 0 015.17 2.39M12 6a15.94 15.94 0 019.55 3.16M3.45 9.16A15.94 15.94 0 0112 6"/></svg>
+          Sem conexão. Reconecte-se para o primeiro acesso.
+        </div>
+
+        <div class="mobile-app-download">
+          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 8px;">É promotor de campo?</p>
+          <button class="btn-download" onclick="downloadApp()">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Baixar App do Promotor
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Configurações Iniciais
+    window.onload = function() {
+      // Ajuste visual para mobile
+      if (window.innerWidth <= 900) {
+        document.getElementById("mobileLogo").style.display = "block";
+      }
+
+      // Verificação de persistência (Simulação)
+      const savedUser = localStorage.getItem("tradeUserRole");
+      // if (savedUser) {
+      //   // Se já estiver logado, redireciona direto
+      //   redirectUser(savedUser);
+      // }
+      
+      checkConnection();
+    };
+
+    window.addEventListener('online', checkConnection);
+    window.addEventListener('offline', checkConnection);
+
+    function checkConnection() {
+      const alertBox = document.getElementById("offlineWarning");
+      if (!navigator.onLine) {
+        alertBox.style.display = "flex";
+      } else {
+        alertBox.style.display = "none";
+      }
+    }
+
+    function handleLogin() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      if (!email || !password) {
+        alert("Por favor, preencha todos os campos.");
+        return;
+      }
+
+      if (!navigator.onLine) {
+        alert("Você precisa de internet para realizar o primeiro acesso e sincronizar os dados.");
+        return;
+      }
+
+      // LÓGICA DE SIMULAÇÃO DE PERFIL
+      // Se tiver "promotor" no email -> Fluxo Mobile
+      // Se não -> Fluxo Gestor (Dashboard da foto)
+      
+      const isPromotor = email.toLowerCase().includes("promotor");
+      const userRole = isPromotor ? "promotor" : "gestor";
+
+      // Simula salvamento de token/dados no dispositivo
+      localStorage.setItem("tradeUserRole", userRole);
+      localStorage.setItem("tradeUserEmail", email);
+      
+      // Feedback visual antes do redirecionamento
+      const btn = document.querySelector('.btn-primary');
+      btn.innerHTML = "Autenticando...";
+      btn.style.opacity = "0.8";
+
+      setTimeout(() => {
+        redirectUser(userRole);
+      }, 800);
+    }
+
+    function redirectUser(role) {
+      if (role === "promotor") {
+        // Vai para a tela de App do Promotor (Mobile First)
+        window.location.href = "/promotor.html";
+        alert("Redirecionando para interface do Promotor (Mobile View)...");
+      } else {
+        // Vai para o Dashboard Gestor (Igual ao print enviado)
+        window.location.href = "gestor/pages/dashboard.html";
+        alert("Redirecionando para Dashboard do Gestor (TradeForce)...");
+      }
+    }
+
+    function downloadApp() {
+      if (confirm("Deseja baixar o APK 'TradeForce Mobile v2.0'?")) {
+        // window.location.href = "/downloads/tradeforce.apk";
+        alert("Download iniciado!");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeForce - Gestão de Roteiros</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../../shared/css/base/variables.css">
+    <link rel="stylesheet" href="../../shared/css/base/reset.css">
+    <link rel="stylesheet" href="../../shared/css/base/typography.css">
+
+    <link rel="stylesheet" href="../css/layout/sidebar.css">
+    <link rel="stylesheet" href="../css/layout/header.css">
+    
+    <link rel="stylesheet" href="../../shared/css/components/buttons.css">
+    <link rel="stylesheet" href="../../shared/css/components/modals.css"> <link rel="stylesheet" href="../css/pages/routes.css">
+</head>
+<body>
+
+    <aside id="sidebar">
+        <div class="brand">
+            <button id="sidebarToggle" class="btn-menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="brand-content">
+                <i class="fa-solid fa-layer-group brand-icon"></i> 
+                <span class="brand-text">Trade<span>Force</span></span>
+            </div>
+        </div>
+
+        <div class="user-profile-mini">
+            <div class="user-avatar"></div>
+            <div class="user-info">
+                <h4>Matheou S.</h4>
+                <p><span class="dot"></span> Gestor</p>
+            </div>
+        </div>
+
+        <nav>
+            <ul>
+                <div class="nav-category">Principal</div>
+                <li>
+                    <a href="dashboard.html" class="nav-link">
+                        <i class="fa-solid fa-chart-pie"></i> 
+                        <span class="link-text">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="routes.html" class="nav-link active">
+                        <i class="fa-solid fa-calendar-check"></i> 
+                        <span class="link-text">Roteiros e Visitas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link">
+                        <i class="fa-solid fa-map-location-dot"></i> 
+                        <span class="link-text">Pontos de Venda</span>
+                    </a>
+                </li>
+                
+                <div class="nav-category">Equipe</div>
+                <li>
+                    <a href="#" class="nav-link">
+                        <i class="fa-solid fa-users"></i> 
+                        <span class="link-text">Colaboradores</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link">
+                        <i class="fa-solid fa-clipboard-list"></i> 
+                        <span class="link-text">Pesquisas</span>
+                    </a>
+                </li>
+                
+                <div class="nav-category">Gestão</div>
+                <li>
+                    <a href="#" class="nav-link">
+                        <i class="fa-solid fa-file-invoice"></i> 
+                        <span class="link-text">Relatórios</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link">
+                        <i class="fa-solid fa-gear"></i> 
+                        <span class="link-text">Configurações</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div style="margin-top: auto;">
+            <a href="#" class="nav-link logout-link">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> 
+                <span class="link-text">Sair</span>
+            </a>
+        </div>
+    </aside>
+
+    <main>
+        <header>
+            <div>
+                <h2>Gestão de Roteiros</h2>
+                <p>Organize a agenda da equipe arrastando os cards.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="btnSave"><i class="fa-solid fa-save"></i> Salvar Alterações</button>
+            </div>
+        </header>
+
+        <div class="routes-container">
+            
+            <div class="promoters-panel">
+                <div class="panel-header">
+                    <h3>Promotores</h3>
+                    <div class="search-wrapper">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" id="searchPromoter" placeholder="Buscar...">
+                    </div>
+                </div>
+                <div class="promoters-list" id="promotersList">
+                    </div>
+            </div>
+
+            <div class="schedule-panel">
+                
+                <div class="schedule-controls">
+                    <div class="selected-promoter-display">
+                        <div class="avatar-display" id="displayAvatar">AS</div>
+                        <div>
+                            <h4 id="displayName" style="font-size:14px; margin:0;">Selecione</h4>
+                            <span id="displayRegion" style="font-size:12px; color:#6b7280;">--</span>
+                        </div>
+                    </div>
+                    
+                    <div class="week-nav">
+                        <button class="btn-nav" id="btnPrevWeek"><i class="fa-solid fa-chevron-left"></i></button>
+                        <span id="weekDisplay">Carregando...</span>
+                        <button class="btn-nav" id="btnNextWeek"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="kanban-grid">
+                    
+                    <div class="column source-column">
+                        <div class="col-header wallet-header">
+                            <div class="wallet-title-row">
+                                <span class="col-title">Carteira</span>
+                                <span class="badge-count" id="walletCount">0</span>
+                            </div>
+                            <div class="local-search-wrapper">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="searchWallet" placeholder="Buscar PDV...">
+                            </div>
+                        </div>
+                        <div class="col-body" id="zone-available"></div>
+                    </div>
+
+                <div class="column">
+                        <div class="col-header">
+                            <div>
+                                <span class="col-title">Segunda</span>
+                                <span class="col-date" id="date-mon">--/--</span>
+                            </div>
+                            <button class="btn-icon-optimize" onclick="optimizeRoute('mon')" title="Otimizar Rota">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="col-body-split">
+                            <div class="split-section roteiro">
+                                <div class="section-label">Roteiro</div>
+                                <div class="day-zone pdv-zone" id="zone-pdv-mon" data-day="mon"></div>
+                                <button class="btn-dashed-add" onclick="openModal('mon', 'pdv')">
+                                    <i class="fa-solid fa-plus"></i> PDV
+                                </button>
+                            </div>
+
+                            <div class="split-section pesquisas">
+                                <div class="section-label">Pesquisas</div>
+                                <div class="survey-zone" id="zone-survey-mon" data-day="mon"></div>
+                                <button class="btn-dashed-add" onclick="openModal('mon', 'survey')">
+                                    <i class="fa-solid fa-plus"></i> Pesquisa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="column">
+                        <div class="col-header">
+                            <div>
+                                <span class="col-title">Terça</span>
+                                <span class="col-date" id="date-tue">--/--</span>
+                            </div>
+                            <button class="btn-icon-optimize" onclick="optimizeRoute('tue')" title="Otimizar Rota">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="col-body-split">
+                            <div class="split-section roteiro">
+                                <div class="section-label">Roteiro</div>
+                                <div class="day-zone pdv-zone" id="zone-pdv-tue" data-day="tue"></div>
+                                <button class="btn-dashed-add" onclick="openModal('tue', 'pdv')">
+                                    <i class="fa-solid fa-plus"></i> PDV
+                                </button>
+                            </div>
+
+                            <div class="split-section pesquisas">
+                                <div class="section-label">Pesquisas</div>
+                                <div class="survey-zone" id="zone-survey-tue" data-day="tue"></div>
+                                <button class="btn-dashed-add" onclick="openModal('tue', 'survey')">
+                                    <i class="fa-solid fa-plus"></i> Pesquisa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column">
+                        <div class="col-header">
+                            <div>
+                                <span class="col-title">Quarta</span>
+                                <span class="col-date" id="date-wed">--/--</span>
+                            </div>
+                            <button class="btn-icon-optimize" onclick="optimizeRoute('wed')" title="Otimizar Rota">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="col-body-split">
+                            <div class="split-section roteiro">
+                                <div class="section-label">Roteiro</div>
+                                <div class="day-zone pdv-zone" id="zone-pdv-wed" data-day="wed"></div>
+                                <button class="btn-dashed-add" onclick="openModal('wed', 'pdv')">
+                                    <i class="fa-solid fa-plus"></i> PDV
+                                </button>
+                            </div>
+
+                            <div class="split-section pesquisas">
+                                <div class="section-label">Pesquisas</div>
+                                <div class="survey-zone" id="zone-survey-wed" data-day="wed"></div>
+                                <button class="btn-dashed-add" onclick="openModal('wed', 'survey')">
+                                    <i class="fa-solid fa-plus"></i> Pesquisa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column">
+                        <div class="col-header">
+                            <div>
+                                <span class="col-title">Quinta</span>
+                                <span class="col-date" id="date-thu">--/--</span>
+                            </div>
+                            <button class="btn-icon-optimize" onclick="optimizeRoute('thu')" title="Otimizar Rota">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="col-body-split">
+                            <div class="split-section roteiro">
+                                <div class="section-label">Roteiro</div>
+                                <div class="day-zone pdv-zone" id="zone-pdv-thu" data-day="thu"></div>
+                                <button class="btn-dashed-add" onclick="openModal('thu', 'pdv')">
+                                    <i class="fa-solid fa-plus"></i> PDV
+                                </button>
+                            </div>
+
+                            <div class="split-section pesquisas">
+                                <div class="section-label">Pesquisas</div>
+                                <div class="survey-zone" id="zone-survey-thu" data-day="thu"></div>
+                                <button class="btn-dashed-add" onclick="openModal('thu', 'survey')">
+                                    <i class="fa-solid fa-plus"></i> Pesquisa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column">
+                        <div class="col-header">
+                            <div>
+                                <span class="col-title">Sexta</span>
+                                <span class="col-date" id="date-fri">--/--</span>
+                            </div>
+                            <button class="btn-icon-optimize" onclick="optimizeRoute('fri')" title="Otimizar Rota">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="col-body-split">
+                            <div class="split-section roteiro">
+                                <div class="section-label">Roteiro</div>
+                                <div class="day-zone pdv-zone" id="zone-pdv-fri" data-day="fri"></div>
+                                <button class="btn-dashed-add" onclick="openModal('fri', 'pdv')">
+                                    <i class="fa-solid fa-plus"></i> PDV
+                                </button>
+                            </div>
+
+                            <div class="split-section pesquisas">
+                                <div class="section-label">Pesquisas</div>
+                                <div class="survey-zone" id="zone-survey-fri" data-day="fri"></div>
+                                <button class="btn-dashed-add" onclick="openModal('fri', 'survey')">
+                                    <i class="fa-solid fa-plus"></i> Pesquisa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Adicionar PDVs</h3>
+                <button onclick="closeModal()" class="btn-close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-content" id="modalList"></div>
+            <div class="modal-footer">
+                <button class="btn btn-text" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="confirmModal()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/components/sidebar.js"></script>
+    <script src="../js/pages/routes.js"></script>
+</body>
+</html>
