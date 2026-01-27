@@ -1,361 +1,218 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-    // --- MOCK DATA: PROMOTORES ---
-    const promoters = [
-        { id: 1, name: 'Andreza Silva', region: 'Zona Sul - SP', initials: 'AS' },
-        { id: 2, name: 'Katia Regina', region: 'Zona Oeste - SP', initials: 'KR' },
-        { id: 3, name: 'João Silva', region: 'Centro - SP', initials: 'JS' },
-        { id: 4, name: 'Ana Dias', region: 'Zona Norte - SP', initials: 'AD' },
+    // --- 1. DADOS (MOCK DATABASE) ---
+    const rawData = [
+        { id: 1, day: '26', name: 'Marcos Costa', route: 'Zona Leste', status: 'done', progress: 100, visitsReal: 15, visitsTotal: 15, checkin: '16:30' },
+        { id: 2, day: '26', name: 'Luana B.', route: 'Centro', status: 'late', progress: 0, visitsReal: 0, visitsTotal: 10, checkin: null },
+        { id: 3, day: '27', name: 'Andreza Silva', route: 'Zona Norte', status: 'done', progress: 100, visitsReal: 12, visitsTotal: 12, checkin: '09:45' },
+        { id: 4, day: '27', name: 'Katia Regina', route: 'Centro', status: 'pending', progress: 60, visitsReal: 6, visitsTotal: 10, checkin: '10:15' },
+        { id: 5, day: '27', name: 'João Silva', route: 'Zona Sul', status: 'late', progress: 0, visitsReal: 0, visitsTotal: 8, checkin: null },
+        { id: 6, day: '27', name: 'Beatriz Lima', route: 'Oeste', status: 'pending', progress: 40, visitsReal: 4, visitsTotal: 10, checkin: '09:00' },
+        { id: 7, day: '28', name: 'Ana Dias', route: 'Grande Vitória', status: 'pending', progress: 20, visitsReal: 2, visitsTotal: 14, checkin: '08:30' },
+        { id: 8, day: '28', name: 'Carlos H.', route: 'Vila Velha', status: 'done', progress: 100, visitsReal: 8, visitsTotal: 8, checkin: '14:20' }
     ];
 
-    // --- MOCK DATA: CARTEIRA DE PDVS ---
-    const wallet = {
-        1: [ 
-            { id: 'p1', name: 'Carrefour Limão', address: 'Av. Otaviano Alves, 100', priority: 'normal', coords: {x: 10, y: 10} },
-            { id: 'p2', name: 'Extra Freguesia', address: 'R. da Balsa, 20', priority: 'priority', coords: {x: 12, y: 80} },
-            { id: 'p3', name: 'Pão de Açúcar Real', address: 'Av. Real, 90', priority: 'normal', coords: {x: 50, y: 50} },
-            { id: 'p4', name: 'Walmart Morumbi', address: 'Av. Morumbi, 10', priority: 'priority', coords: {x: 15, y: 15} }
-        ],
-        2: [
-            { id: 'p5', name: 'Sonda Pompeia', address: 'Av. Pompeia, 1200', priority: 'normal', coords: {x: 0, y: 0} },
-            { id: 'p6', name: 'Zaffari Bourbon', address: 'R. Turiassu, 2100', priority: 'priority', coords: {x: 100, y: 100} }
-        ],
-        3: [], 4: []
-    };
+    let currentWeekStart = new Date();
+    let selectedDay = new Date().getDate().toString();
+    let sortDirection = 'asc'; 
 
-    // --- MOCK DATA: PESQUISAS DISPONÍVEIS (NOVO) ---
-    const availableSurveys = [
-        { id: 's1', title: 'Preço Regular', type: 'Preço' },
-        { id: 's2', title: 'Ponta de Gôndola', type: 'Exibição' },
-        { id: 's3', title: 'Ruptura Visual', type: 'Estoque' },
-        { id: 's4', title: 'Share de Gôndola', type: 'Espaço' },
-        { id: 's5', title: 'Ação Concorrência', type: 'Marketing' }
-    ];
-
-    // --- STATE: AGENDAMENTO DE PDVS ---
-    let schedule = {
-        1: { 'mon': [], 'tue': [], 'wed': [], 'thu': [], 'fri': [] },
-        2: { 'mon': [], 'tue': [], 'wed': [], 'thu': [], 'fri': [] },
-        3: { 'mon': [], 'tue': [], 'wed': [], 'thu': [], 'fri': [] },
-        4: { 'mon': [], 'tue': [], 'wed': [], 'thu': [], 'fri': [] }
-    };
-
-    // --- STATE: AGENDAMENTO DE PESQUISAS (NOVO) ---
-    let surveysSchedule = {
-        1: { 'mon': [], 'tue': [], 'wed': [], 'thu': [], 'fri': [] },
-        2: { 'mon': [], 'tue': [], 'wed': [], 'thu': [], 'fri': [] },
-        3: { 'mon': [], 'tue': [], 'wed': [], 'thu': [], 'fri': [] },
-        4: { 'mon': [], 'tue': [], 'wed': [], 'thu': [], 'fri': [] }
-    };
-
-    let currentPromoterId = 1;
-    let currentModalDay = null;
-    let currentModalType = 'pdv'; // 'pdv' ou 'survey'
-    let currentReferenceDate = new Date();
-
-    // --- INIT ---
-    renderPromoters(promoters);
-    selectPromoter(1);
-    updateWeekHeader();
-
-    // --- LISTENERS ---
-    document.getElementById('searchPromoter')?.addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        renderPromoters(promoters.filter(p => p.name.toLowerCase().includes(term)));
-    });
-
-    document.getElementById('searchWallet')?.addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        document.querySelectorAll('#zone-available .pdv-card').forEach(card => {
-            const txt = card.textContent.toLowerCase();
-            card.style.display = txt.includes(term) ? 'block' : 'none';
-        });
-    });
-
-    document.getElementById('btnSave').addEventListener('click', function() {
-        const original = this.innerHTML;
-        this.innerHTML = '<i class="fa-solid fa-check"></i> Salvo!';
-        console.log('PDVs:', schedule, 'Pesquisas:', surveysSchedule);
-        setTimeout(() => this.innerHTML = original, 2000);
-    });
-
-    document.getElementById('btnPrevWeek').addEventListener('click', () => {
-        currentReferenceDate.setDate(currentReferenceDate.getDate() - 7);
-        updateWeekHeader();
-    });
-    document.getElementById('btnNextWeek').addEventListener('click', () => {
-        currentReferenceDate.setDate(currentReferenceDate.getDate() + 7);
-        updateWeekHeader();
-    });
-
-    document.getElementById('btnTogglePromoters').addEventListener('click', () => {
-        const panel = document.querySelector('.promoters-panel');
-        panel.classList.toggle('collapsed');
-    });
-
-    // --- CORE FUNCTIONS ---
-
-    function selectPromoter(id) {
-        currentPromoterId = id;
-        const p = promoters.find(x => x.id === id);
-        
-        document.getElementById('displayAvatar').textContent = p.initials;
-        document.getElementById('displayName').textContent = p.name;
-        document.getElementById('displayRegion').textContent = p.region;
-
-        document.querySelectorAll('.promoter-card').forEach(el => {
-            el.classList.toggle('active', parseInt(el.dataset.id) === id);
-        });
-
-        loadBoard();
-    }
-
-    function loadBoard() {
-        // Limpar Zonas
-        document.getElementById('zone-available').innerHTML = '';
-        document.querySelectorAll('.day-zone, .survey-zone').forEach(el => el.innerHTML = '');
-        
-        // 1. Carregar Carteira
-        const userWallet = wallet[currentPromoterId] || [];
-        document.getElementById('walletCount').textContent = userWallet.length;
-        userWallet.forEach(pdv => {
-            document.getElementById('zone-available').appendChild(createPDVCard(pdv, null, true));
-        });
-
-        const days = ['mon', 'tue', 'wed', 'thu', 'fri'];
-
-        days.forEach(day => {
-            // 2. Carregar PDVs do Dia
-            const userPdvSchedule = schedule[currentPromoterId][day] || [];
-            const zonePdv = document.getElementById(`zone-pdv-${day}`);
-            
-            userPdvSchedule.forEach(item => {
-                const pdv = userWallet.find(x => x.id === item.pdvId);
-                if(pdv && zonePdv) {
-                    zonePdv.appendChild(createPDVCard(pdv, item.instanceId, false));
-                }
-            });
-
-            // 3. Carregar Pesquisas do Dia (NOVO)
-            const userSurveySchedule = surveysSchedule[currentPromoterId][day] || [];
-            const zoneSurvey = document.getElementById(`zone-survey-${day}`);
-
-            userSurveySchedule.forEach(item => {
-                const survey = availableSurveys.find(x => x.id === item.surveyId);
-                if(survey && zoneSurvey) {
-                    zoneSurvey.appendChild(createSurveyCard(survey, item.instanceId));
-                }
-            });
-        });
-    }
-
-    // --- COMPONENTES VISUAIS ---
-
-    function createPDVCard(pdv, instanceId, isSource) {
-        const div = document.createElement('div');
-        div.className = 'pdv-card';
-        if(isSource) div.classList.add('source-card');
-        
-        div.id = isSource ? `source_${pdv.id}` : instanceId;
-        div.draggable = true;
-        div.dataset.pdvId = pdv.id;
-        div.dataset.source = isSource;
-
-        div.innerHTML = `
-            <span class="pdv-name">${pdv.name}</span>
-            <div class="pdv-details"><i class="fa-solid fa-location-dot"></i> ${pdv.address}</div>
-            <div class="status-dot ${pdv.priority === 'priority' ? 'dot-priority' : 'dot-normal'}"></div>
-            ${!isSource ? `<button class="btn-remove-item" onclick="removeItem('${instanceId}', 'pdv')"><i class="fa-solid fa-times"></i></button>` : ''}
-        `;
-
-        div.addEventListener('dragstart', handleDragStart);
-        return div;
-    }
-
-    function createSurveyCard(survey, instanceId) {
-        const div = document.createElement('div');
-        div.className = 'survey-card';
-        div.id = instanceId;
-        
-        // Pesquisas não são "draggables" neste exemplo, apenas adicionáveis via modal
-        div.innerHTML = `
-            <span class="survey-title">${survey.title}</span>
-            <span class="survey-type">${survey.type}</span>
-            <button class="btn-remove-item" onclick="removeItem('${instanceId}', 'survey')"><i class="fa-solid fa-times"></i></button>
-        `;
-        return div;
-    }
-
-    // --- DRAG AND DROP (Apenas para PDVs) ---
-    function handleDragStart(e) {
-        e.dataTransfer.setData('text/plain', JSON.stringify({
-            pdvId: e.target.dataset.pdvId,
-            isSource: e.target.dataset.source === 'true',
-            domId: e.target.id
-        }));
-    }
-
-    document.querySelectorAll('.day-zone').forEach(zone => {
-        zone.addEventListener('dragover', e => e.preventDefault());
-        zone.addEventListener('drop', handleDrop);
-    });
-
-    function handleDrop(e) {
-        e.preventDefault();
-        const zone = e.currentTarget;
-        const day = zone.dataset.day;
-        const data = JSON.parse(e.dataTransfer.getData('text/plain'));
-        
-        const userWallet = wallet[currentPromoterId];
-        const pdv = userWallet.find(x => x.id === data.pdvId);
-
-        // Lógica de Movimento PDV (Igual ao anterior)
-        const existing = schedule[currentPromoterId][day].find(x => x.pdvId === data.pdvId);
-        if(existing && existing.instanceId !== data.domId) {
-            alert('PDV já agendado hoje.'); return;
-        }
-
-        const newId = `inst_pdv_${Date.now()}`;
-
-        if(!data.isSource) {
-            // Remove do local antigo
-            removeItem(data.domId, 'pdv');
-        }
-
-        schedule[currentPromoterId][day].push({ instanceId: newId, pdvId: data.pdvId });
-        zone.appendChild(createPDVCard(pdv, newId, false));
-    }
-
-    // --- REMOÇÃO UNIFICADA ---
-    window.removeItem = function(instanceId, type) {
-        const el = document.getElementById(instanceId);
-        if(!el) return;
-
-        // Achar o dia através do elemento pai
-        const zone = el.parentElement; 
-        const day = zone.getAttribute('data-day');
-
-        if(day) {
-            if(type === 'pdv') {
-                schedule[currentPromoterId][day] = schedule[currentPromoterId][day].filter(x => x.instanceId !== instanceId);
-            } else if(type === 'survey') {
-                surveysSchedule[currentPromoterId][day] = surveysSchedule[currentPromoterId][day].filter(x => x.instanceId !== instanceId);
-            }
-        }
-        el.remove();
-    }
-
-    // --- MODAL REUTILIZÁVEL ---
-    window.openModal = function(day, type) {
-        currentModalDay = day;
-        currentModalType = type; // 'pdv' ou 'survey'
-        
-        const modal = document.getElementById('modalOverlay');
-        const list = document.getElementById('modalList');
-        const title = modal.querySelector('h3');
-        list.innerHTML = '';
-
-        if(type === 'pdv') {
-            title.textContent = "Adicionar PDVs";
-            const userWallet = wallet[currentPromoterId];
-            
-            userWallet.forEach(item => {
-                const exists = schedule[currentPromoterId][day].find(x => x.pdvId === item.id);
-                createCheckRow(list, item.id, item.name, item.address, exists);
-            });
-
-        } else {
-            title.textContent = "Adicionar Pesquisas";
-            // Para pesquisas, permitimos repetir a mesma pesquisa no mesmo dia? 
-            // Vamos assumir que sim, ou não bloqueamos.
-            availableSurveys.forEach(item => {
-                // Aqui não checamos 'exists' pq pode ter varias pesquisas iguais
-                createCheckRow(list, item.id, item.title, item.type, false);
-            });
-        }
-
-        modal.classList.add('open');
-    }
-
-    function createCheckRow(container, value, title, subtitle, isDisabled) {
-        const row = document.createElement('div');
-        row.className = 'check-row';
-        row.innerHTML = `
-            <input type="checkbox" value="${value}" ${isDisabled ? 'disabled checked' : ''}>
-            <div><strong>${title}</strong> <small>${subtitle}</small></div>
-        `;
-        row.onclick = function(e) {
-            if(e.target.type !== 'checkbox' && !isDisabled) {
-                const chk = this.querySelector('input'); chk.checked = !chk.checked;
-            }
-        };
-        container.appendChild(row);
-    }
-
-    window.closeModal = function() {
-        document.getElementById('modalOverlay').classList.remove('open');
-    }
-
-    window.confirmModal = function() {
-        const checks = document.querySelectorAll('#modalList input:checked:not(:disabled)');
-        
-        checks.forEach(chk => {
-            const idVal = chk.value;
-            const newId = `inst_${currentModalType}_${Date.now()}_${Math.random().toString(36).substr(2,5)}`;
-
-            if(currentModalType === 'pdv') {
-                const pdv = wallet[currentPromoterId].find(x => x.id === idVal);
-                schedule[currentPromoterId][currentModalDay].push({ instanceId: newId, pdvId: idVal });
-                
-                const zone = document.getElementById(`zone-pdv-${currentModalDay}`);
-                zone.appendChild(createPDVCard(pdv, newId, false));
-            
-            } else {
-                const survey = availableSurveys.find(x => x.id === idVal);
-                surveysSchedule[currentPromoterId][currentModalDay].push({ instanceId: newId, surveyId: idVal });
-                
-                const zone = document.getElementById(`zone-survey-${currentModalDay}`);
-                zone.appendChild(createSurveyCard(survey, newId));
-            }
-        });
-        closeModal();
-    }
+    const tableBody = document.getElementById('routesTableBody');
+    const weekContainer = document.getElementById('weekDaysContainer');
     
-    // --- UTILS ---
-    function renderPromoters(listData) {
-        const list = document.getElementById('promotersList');
-        list.innerHTML = '';
-        listData.forEach(p => {
-            const card = document.createElement('div');
-            card.className = `promoter-card ${p.id === currentPromoterId ? 'active' : ''}`;
-            card.onclick = () => selectPromoter(p.id);
-            card.innerHTML = `<div class="promoter-avatar">${p.initials}</div>
-                              <div class="promoter-info"><h4>${p.name}</h4><p>${p.region}</p></div>`;
-            list.appendChild(card);
+    const filters = {
+        name: document.getElementById('filterName'),
+        sortNameBtn: document.getElementById('sortNameBtn'),
+        status: document.getElementById('filterStatus'),
+        progress: document.getElementById('filterProgress'),
+        visits: document.getElementById('filterVisits'),
+        sortCheckin: document.getElementById('sortCheckin'),
+        clearBtn: document.getElementById('clearFilters')
+    };
+
+    // --- LÓGICA DE SEMANA ---
+    function getMonday(d) {
+        d = new Date(d);
+        const day = d.getDay();
+        const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+        return new Date(d.setDate(diff));
+    }
+
+    function generateWeekDays(startDate) {
+        weekContainer.innerHTML = '';
+        const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+        let currentLoopDate = new Date(startDate);
+
+        for (let i = 0; i < 7; i++) {
+            const dayNum = currentLoopDate.getDate();
+            const dayName = days[currentLoopDate.getDay()];
+            const div = document.createElement('div');
+            div.className = 'day-card';
+            
+            if (dayNum.toString() === selectedDay) div.classList.add('active');
+            if (dayName === 'Dom') div.classList.add('disabled');
+
+            div.innerHTML = `<span class="day-name">${dayName}</span><span class="day-number">${dayNum}</span>`;
+            
+            if (dayName !== 'Dom') {
+                div.addEventListener('click', () => {
+                    document.querySelectorAll('.day-card').forEach(c => c.classList.remove('active'));
+                    div.classList.add('active');
+                    selectedDay = dayNum.toString();
+                    applyFiltersAndRender();
+                });
+            }
+            weekContainer.appendChild(div);
+            currentLoopDate.setDate(currentLoopDate.getDate() + 1);
+        }
+    }
+
+    document.getElementById('prevWeekBtn').addEventListener('click', () => {
+        currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+        generateWeekDays(getMonday(currentWeekStart));
+    });
+
+    document.getElementById('nextWeekBtn').addEventListener('click', () => {
+        currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+        generateWeekDays(getMonday(currentWeekStart));
+    });
+
+    // --- LÓGICA DE FILTRAGEM ---
+
+    function getAvatarColor(name) {
+        const colors = [{bg:'#dbeafe',tx:'#1e40af'},{bg:'#d1fae5',tx:'#065f46'},{bg:'#ffedd5',tx:'#9a3412'},{bg:'#fce7f3',tx:'#9d174d'},{bg:'#f3f4f6',tx:'#374151'}];
+        return colors[name.length % colors.length];
+    }
+
+    function getStatusLabel(status) {
+        const map = {
+            'done': { label: 'Finalizado', class: 'status-done', color: 'var(--success)' },
+            'pending': { label: 'Em Rota', class: 'status-pending', color: 'var(--warning)' },
+            'late': { label: 'Não Iniciado', class: 'status-late', color: 'var(--error)' }
+        };
+        return map[status] || map['late'];
+    }
+
+    function applyFiltersAndRender() {
+        // 1. Pega dados do dia (Total disponível para este dia = Y)
+        const dayData = rawData.filter(item => item.day === selectedDay);
+        
+        let filtered = [...dayData]; // Clona para filtrar (X)
+
+        // Filtros
+        const nameVal = filters.name.value.toLowerCase();
+        if (nameVal) filtered = filtered.filter(item => item.name.toLowerCase().includes(nameVal));
+
+        if (filters.status.value !== 'all') filtered = filtered.filter(item => item.status === filters.status.value);
+
+        const progVal = filters.progress.value;
+        if (progVal !== 'all') {
+            if (progVal === '100') filtered = filtered.filter(i => i.progress === 100);
+            else if (progVal === '0') filtered = filtered.filter(i => i.progress === 0);
+            else if (progVal === '50-99') filtered = filtered.filter(i => i.progress >= 50 && i.progress < 100);
+            else if (progVal === '0-49') filtered = filtered.filter(i => i.progress > 0 && i.progress < 50);
+        }
+
+        const visitVal = filters.visits.value;
+        if (visitVal !== 'all') {
+            if (visitVal === 'high') filtered = filtered.filter(i => i.visitsTotal > 10);
+            else if (visitVal === 'medium') filtered = filtered.filter(i => i.visitsTotal >= 5 && i.visitsTotal <= 10);
+            else if (visitVal === 'low') filtered = filtered.filter(i => i.visitsTotal < 5);
+        }
+
+        // Ordenação
+        filtered.sort((a, b) => {
+            return sortDirection === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+        });
+
+        const sortCheckinVal = filters.sortCheckin.value;
+        if (sortCheckinVal) {
+            filtered.sort((a, b) => {
+                const timeA = a.checkin ? parseInt(a.checkin.replace(':', '')) : (sortCheckinVal === 'recent' ? -1 : 9999);
+                const timeB = b.checkin ? parseInt(b.checkin.replace(':', '')) : (sortCheckinVal === 'recent' ? -1 : 9999);
+                return sortCheckinVal === 'recent' ? timeB - timeA : timeA - timeB;
+            });
+        }
+
+        // Renderiza passando: (DadosFiltrados, TotalDoDia)
+        renderTable(filtered, dayData.length);
+    }
+
+    function renderTable(data, totalForDay) {
+        tableBody.innerHTML = '';
+        
+        // Atualiza contador: Mostrando X de Y resultados
+        const counterElem = document.getElementById('resultsCount');
+        counterElem.innerHTML = `Mostrando <strong>${data.length}</strong> de <strong>${totalForDay}</strong> resultados`;
+
+        if (data.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="empty-state">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <h4>Nenhuma rota encontrada</h4>
+                        <p>Ajuste os filtros ou troque o dia.</p>
+                    </td>
+                </tr>`;
+            return;
+        }
+
+        data.forEach(item => {
+            const initials = item.name.match(/\b\w/g) || [];
+            const avatarTxt = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
+            const colors = getAvatarColor(item.name);
+            const statusInfo = getStatusLabel(item.status);
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="promoter-cell">
+                    <div class="activity-avatar small" style="background: ${colors.bg}; color: ${colors.tx};">${avatarTxt}</div> 
+                    <div>
+                        <span class="fw-500">${item.name}</span>
+                        <span class="sub-text">${item.route}</span>
+                    </div>
+                </td>
+                <td><span class="status-badge ${statusInfo.class}">${statusInfo.label}</span></td>
+                <td>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: ${item.progress}%; background-color: ${statusInfo.color};"></div>
+                    </div>
+                    <span class="progress-text">${item.progress}%</span>
+                </td>
+                <td>${item.visitsReal} / ${item.visitsTotal}</td>
+                <td>${item.checkin || '--:--'}</td>
+                <td class="action-cell">
+                    <button class="btn-icon-small" title="Ver Detalhes"><i class="fa-solid fa-eye"></i></button>
+                    <button class="btn-icon-small" title="Ver Mapa"><i class="fa-solid fa-map-marked-alt"></i></button>
+                </td>
+            `;
+            tableBody.appendChild(row);
         });
     }
 
-    function updateWeekHeader() {
-        const display = document.getElementById('weekDisplay');
-        const day = currentReferenceDate.getDay(); 
-        const diff = currentReferenceDate.getDate() - day + (day === 0 ? -6 : 1); 
-        const monday = new Date(currentReferenceDate);
-        monday.setDate(diff);
+    filters.sortNameBtn.addEventListener('click', () => {
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+        filters.sortNameBtn.innerHTML = sortDirection === 'asc' ? '<i class="fa-solid fa-sort-alpha-down"></i>' : '<i class="fa-solid fa-sort-alpha-up"></i>';
+        applyFiltersAndRender();
+    });
 
-        const daysIds = ['date-mon', 'date-tue', 'date-wed', 'date-thu', 'date-fri'];
-        const options = { day: '2-digit', month: '2-digit' };
-        
-        let loopDate = new Date(monday);
-        const startStr = monday.toLocaleDateString('pt-BR', options);
-        
-        for(let i=0; i<5; i++) {
-            const el = document.getElementById(daysIds[i]);
-            if(el) el.textContent = loopDate.toLocaleDateString('pt-BR', options);
-            loopDate.setDate(loopDate.getDate() + 1);
+    Object.values(filters).forEach(el => {
+        if(el && el.tagName !== 'BUTTON') {
+            el.addEventListener('change', applyFiltersAndRender);
+            if(el.tagName === 'INPUT') el.addEventListener('keyup', applyFiltersAndRender);
         }
-        const friday = new Date(monday); friday.setDate(monday.getDate() + 4);
-        display.textContent = `Semana (${startStr} a ${friday.toLocaleDateString('pt-BR', options)})`;
-    }
+    });
 
-    window.optimizeRoute = (day) => alert('Otimizando ' + day);
+    filters.clearBtn.addEventListener('click', () => {
+        filters.name.value = '';
+        filters.status.value = 'all';
+        filters.progress.value = 'all';
+        filters.visits.value = 'all';
+        filters.sortCheckin.value = '';
+        sortDirection = 'asc';
+        filters.sortNameBtn.innerHTML = '<i class="fa-solid fa-sort"></i>';
+        applyFiltersAndRender();
+    });
+
+    generateWeekDays(getMonday(currentWeekStart));
+    applyFiltersAndRender();
 });
