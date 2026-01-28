@@ -1,13 +1,13 @@
-/* Container Semanal (Mantido) */
+/* Container Semanal */
 .week-filter-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
     background-color: white;
-    padding: 1rem;
+    padding: 0.1rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-sm);
-    margin-bottom: 2rem;
+    margin-bottom: 0.1rem;
 }
 
 .week-days {
@@ -247,4 +247,556 @@ table.filter-table thead th {
 .pagination-controls button:hover:not(.active):not(:disabled) {
     background-color: var(--bg-light);
     border-color: #cbd5e1;
+}
+
+/* --- MODAL ESTRUTURA --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.modal-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+/* --- AJUSTE DE TAMANHO DO MODAL --- */
+.modal-container {
+    background: white;
+    width: 1200px; /* AUMENTEI PARA FICAR MAIOR */
+    height: 750px; /* AUMENTEI A ALTURA */
+    border-radius: var(--border-radius);
+    display: flex;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+/* Lado Esquerdo mais largo */
+.modal-left {
+    width: 40%; /* Ajuste proporção */
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border-color);
+    background-color: white;
+    overflow-y: auto; /* Permite scroll se a tela for pequena */
+}
+
+/* Lado Direito (Mapa) maior */
+.modal-right {
+    width: 60%; /* Mapa ganha mais destaque */
+    background: #f1f5f9;
+    position: relative;
+}
+
+/* --- SEPARAÇÃO VISUAL (Ordem vs Busca) --- */
+
+/* Caixa da Sequência (Topo) */
+.sequence-container {
+    background-color: #f0f9ff; /* Azulzinho bem claro */
+    border: 1px solid #bae6fd;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.sequence-header {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #0369a1;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sequence-list {
+    list-style: none;
+    padding: 0;
+    background: white;
+    border: 1px solid #e0f2fe;
+    border-radius: 6px;
+    min-height: 60px;
+    max-height: 180px; /* Limite de altura */
+    overflow-y: auto;
+}
+
+/* Caixa de Busca (Baixo) */
+.search-pdv-section {
+    background-color: white;
+    border-top: 2px dashed var(--border-color);
+    padding-top: 1.5rem;
+}
+
+/* --- REFORÇO DO INPUT DE DATA (Caso tenha perdido) --- */
+input[type="date"].input-field {
+    appearance: none;
+    -webkit-appearance: none;
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    outline: none;
+    height: 40px;
+}
+.modal-header h3 {
+    margin-bottom: 1.5rem;
+    color: var(--text-dark);
+}
+
+.modal-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Impede scroll na área geral do corpo */
+}
+
+.step-content {
+    display: none;
+    height: 100%;
+    flex-direction: column;
+}
+
+.step-content.active {
+    display: flex;
+    animation: fadeIn 0.3s;
+}
+
+/* --- INDICADORES VISUAIS (Bolinhas) --- */
+.step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+
+.step {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    border: 2px solid white;
+    box-shadow: 0 0 0 1px #cbd5e1;
+    transition: all 0.3s;
+}
+
+.step.active {
+    background: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    transform: scale(1.2);
+}
+
+.step-line {
+    width: 60px;
+    height: 2px;
+    background: #e2e8f0;
+    margin: 0 10px;
+}
+
+.step-title {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* --- FORMULÁRIOS E BUSCA --- */
+.form-group {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+}
+
+.search-box-simple {
+    position: relative;
+    margin-bottom: 0.5rem;
+}
+
+.search-box-simple i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    font-size: 0.8rem;
+}
+
+.search-box-simple input {
+    width: 100%;
+    padding: 0.5rem 0.5rem 0.5rem 2.2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    outline: none;
+    font-size: 0.85rem;
+}
+.search-box-simple input:focus {
+    border-color: var(--primary-color);
+}
+
+/* --- LISTAS COM SCROLL (Áreas específicas) --- */
+
+/* Lista de Promotores */
+.custom-select-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    
+    /* Configuração do Scroll */
+    max-height: 500px; /* Altura fixa para forçar scroll */
+    overflow-y: auto;
+    
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: #f8fafc;
+}
+
+/* Lista de PDVs */
+.pdv-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    
+    /* Configuração do Scroll */
+    max-height: 320px; /* Altura fixa para forçar scroll */
+    overflow-y: auto;
+    
+    padding-right: 5px;
+}
+
+/* Estilização da Scrollbar (Fina e Discreta) */
+.custom-select-list::-webkit-scrollbar,
+.pdv-list::-webkit-scrollbar {
+    width: 5px;
+}
+.custom-select-list::-webkit-scrollbar-track,
+.pdv-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-select-list::-webkit-scrollbar-thumb,
+.pdv-list::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 10px;
+}
+
+/* --- ITENS DAS LISTAS --- */
+
+/* Item Promotor */
+.promoter-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.5rem;
+    border-radius: 6px;
+    background: white;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.promoter-option:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+}
+.promoter-option.selected {
+    border-color: var(--primary-color);
+    background-color: #eff6ff;
+}
+
+.promoter-avatar-small {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    background: #dbeafe;
+    flex-shrink: 0;
+}
+
+.promoter-info strong { font-size: 0.85rem; color: var(--text-dark); display: block; }
+.promoter-info span { font-size: 0.75rem; color: var(--text-light); }
+
+/* Item PDV */
+.pdv-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    background: white;
+}
+.pdv-item:hover { background-color: #f8fafc; }
+
+.pdv-item label {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.pdv-item label strong { font-size: 0.85rem; color: var(--text-dark); }
+.pdv-item label span { font-size: 0.75rem; color: var(--text-light); margin-top: 2px; }
+
+/* --- RODAPÉ E MAPA --- */
+.modal-footer {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid transparent;
+}
+
+.footer-nav {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.modal-right {
+    width: 55%;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid var(--border-color);
+}
+
+#mapPlaceholder {
+    text-align: center;
+    color: #94a3b8;
+}
+#mapPlaceholder i { font-size: 3rem; margin-bottom: 1rem; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Helper */
+.hidden { display: none !important; }
+
+/* Estilo Específico para o Botão Voltar do Modal */
+#btnBack {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    color: var(--text-dark);
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    
+    /* Garante alinhamento com o botão Próximo */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#btnBack:hover {
+    background-color: #f8fafc; /* Cinza bem claro */
+    border-color: #cbd5e1;
+    color: var(--primary-color);
+}
+
+/* Estilo unificado para inputs de data */
+input[type="date"].input-field {
+    appearance: none;
+    -webkit-appearance: none; /* Remove estilo nativo do Chrome/Safari */
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.8rem; /* Mesmo padding dos outros */
+    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif; /* Garante a fonte correta */
+    color: var(--text-dark);
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    outline: none;
+    height: 40px; /* Força a mesma altura da barra de pesquisa */
+    cursor: text;
+    transition: border-color 0.2s;
+}
+
+/* Efeito de foco (igual aos outros) */
+input[type="date"].input-field:focus {
+    border-color: var(--primary-color);
+}
+
+/* Customização do ícone de calendário (o "calendariozinho" na direita) */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(0.5); /* Deixa o ícone cinza (padrão é preto forte) */
+    opacity: 0.6;
+    transition: 0.2s;
+    padding: 5px; /* Aumenta a área de clique */
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* --- LISTA DE SEQUÊNCIA (DRAG & DROP) --- */
+.sequence-container {
+    margin-bottom: 1.5rem;
+}
+
+.sequence-list {
+    list-style: none;
+    padding: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: #f8fafc;
+    min-height: 50px;
+}
+
+.sequence-item {
+    display: flex;
+    align-items: center;
+    padding: 0.6rem;
+    background: white;
+    border-bottom: 1px solid var(--border-color);
+    cursor: grab; /* Mãozinha de pegar */
+    transition: background 0.2s;
+}
+
+.sequence-item:last-child { border-bottom: none; }
+.sequence-item:hover { background-color: #f1f5f9; }
+.sequence-item:active { cursor: grabbing; }
+
+/* Bolinha com número na lista */
+.seq-number {
+    width: 24px;
+    height: 24px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.seq-info { flex: 1; font-size: 0.85rem; font-weight: 500; color: var(--text-dark); }
+
+.btn-remove-item {
+    background: none; border: none; color: #94a3b8; cursor: pointer; padding: 5px;
+}
+.btn-remove-item:hover { color: var(--error); }
+
+.empty-sequence { padding: 1rem; text-align: center; color: #94a3b8; font-size: 0.8rem; font-style: italic; }
+
+.divider { height: 1px; background: var(--border-color); margin: 1.5rem 0; }
+
+/* --- CORREÇÃO DOS PINOS DO MAPA --- */
+.custom-marker-icon {
+    background: transparent;
+    border: none;
+}
+
+.marker-pin {
+    width: 30px;
+    height: 30px;
+    border-radius: 50% 50% 50% 0;
+    background: #2563eb; /* Cor azul fixa para garantir */
+    position: absolute;
+    transform: rotate(-45deg);
+    left: 50%;
+    top: 50%;
+    margin: -15px 0 0 -15px;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+    z-index: 1; /* Fica atrás do número */
+}
+
+/* O círculo branco interno */
+.marker-pin::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    margin: 5px 0 0 5px; /* Centraliza no quadrado rotacionado */
+    background: #fff;
+    position: absolute;
+    border-radius: 50%;
+}
+
+/* O número (Correção para não rotacionar) */
+.marker-number {
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); /* Ajuste fino vertical para centralizar no pino */
+    z-index: 10; /* Fica na frente de tudo */
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #000000;
+    pointer-events: none; /* Deixa o clique passar para o marcador */
+}
+
+/* --- AJUSTES DO MODAL E ETAPAS --- */
+.step-content {
+    display: none;
+    height: 100%;
+    flex-direction: column;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.step-content.active {
+    display: flex;
+}
+
+/* Ajuste na lista de sequência para a Etapa 3 */
+.sequence-container {
+    background-color: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 8px;
+    padding: 1rem;
+    flex: 1; /* Ocupa altura disponível */
+    display: flex;
+    flex-direction: column;
+}
+
+.sequence-list {
+    flex: 1;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #e0f2fe;
+    border-radius: 6px;
+    max-height: 400px; /* Limite maior na etapa 3 */
+}
+
+/* Ajuste no rodapé para ficar fixo embaixo */
+.modal-footer {
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
 }

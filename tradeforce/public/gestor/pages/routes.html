@@ -20,6 +20,12 @@
     <link rel="stylesheet" href="../../shared/css/components/badges.css">
     <link rel="stylesheet" href="../../shared/css/components/inputs.css">
     <link rel="stylesheet" href="../css/pages/routes.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 </head>
 <body>
 
@@ -65,7 +71,7 @@
             </div>
         </header>
 
-        <div class="kpi-grid" style="margin-bottom: 2rem;">
+        <div class="kpi-grid" style="margin-bottom: 1rem;">
             <div class="card blue-border">
                 <div class="card-header">
                     <span class="card-title">Roteiros Hoje</span>
@@ -188,6 +194,103 @@
             </div>
         </div>
     </main>
+
+    <div id="createRouteModal" class="modal-overlay hidden">
+        <div class="modal-container">
+            <div class="modal-left">
+                <div class="modal-header">
+                    <h3>Criar Novo Roteiro</h3>
+                    
+                    <div class="step-indicator">
+                        <div class="step active" id="step1-indicator"></div>
+                        <div class="step-line"></div>
+                        <div class="step" id="step2-indicator"></div>
+                        <div class="step-line"></div>
+                        <div class="step" id="step3-indicator"></div>
+                    </div>
+                    
+                    <p class="step-title" id="stepTitle">Dados Iniciais</p>
+                </div>
+
+                <div class="modal-body">
+                    
+                    <div id="step1-content" class="step-content active">
+                        <div class="form-group">
+                            <label>Data do Roteiro</label>
+                            <input type="date" class="input-field" id="inputDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Selecione o Promotor</label>
+                            <div class="search-box-simple">
+                                <i class="fa-solid fa-search"></i>
+                                <input type="text" id="searchPromoter" placeholder="Buscar promotor...">
+                            </div>
+                            <div class="custom-select-list" id="promoterList"></div>
+                            <input type="hidden" id="selectedPromoterId">
+                        </div>
+                    </div>
+
+                    <div id="step2-content" class="step-content">
+                        <div class="form-group">
+                            <label>Selecione os Pontos de Venda</label>
+                            <div class="search-box-simple">
+                                <i class="fa-solid fa-search"></i>
+                                <input type="text" placeholder="Buscar cliente ou endereço..." id="searchPdv">
+                            </div>
+                            
+                            <div class="pdv-list" id="pdvList">
+                                <div class="pdv-item">
+                                    <input type="checkbox" id="pdv1">
+                                    <label for="pdv1"><strong>Supermercado Central</strong><span>Av. Principal, 100</span></label>
+                                </div>
+                                <div class="pdv-item">
+                                    <input type="checkbox" id="pdv2">
+                                    <label for="pdv2"><strong>Mercadinho da Esquina</strong><span>Rua das Flores, 45</span></label>
+                                </div>
+                                <div class="pdv-item">
+                                    <input type="checkbox" id="pdv3">
+                                    <label for="pdv3"><strong>Hiper Extra</strong><span>Rodovia do Sol, Km 5</span></label>
+                                </div>
+                                <div class="pdv-item">
+                                    <input type="checkbox" id="pdv4">
+                                    <label for="pdv4"><strong>Atacadão do Povo</strong><span>Av. Vitória, 200</span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="step3-content" class="step-content">
+                        <div class="sequence-container">
+                            <div class="sequence-header">
+                                <span><i class="fa-solid fa-list-ol"></i> Definir Ordem de Visita</span>
+                                <small>Arraste para organizar</small>
+                            </div>
+                            <ul id="routeSequenceList" class="sequence-list">
+                                </ul>
+                        </div>
+                        <p style="font-size: 0.8rem; color: #64748b; text-align: center; margin-top: 10px;">
+                            <i class="fa-solid fa-circle-info"></i> O mapa ao lado atualiza conforme a ordem acima.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn-text-only" id="btnCancel">Cancelar</button>
+                    <div class="footer-nav">
+                        <button class="btn-secondary hidden" id="btnBack">Voltar</button>
+                        <button class="btn-primary" id="btnNext">Próximo</button>
+                        <button class="btn-primary hidden" id="btnSave">Salvar Roteiro</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-right">
+                <div id="mapRoute" style="width: 100%; height: 100%; z-index: 1;"></div>
+            </div>
+        </div>
+    </div>
 
     <script src="../js/components/sidebar.js"></script>
     <script src="../js/pages/routes.js"></script>
