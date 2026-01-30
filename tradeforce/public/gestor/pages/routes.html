@@ -3,58 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TradeForce - Roteiros e Visitas</title>
+    <title>TradeGriffus - Gestão de Roteiros</title>
     
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="../../shared/css/base/variables.css">
     <link rel="stylesheet" href="../../shared/css/base/reset.css">
     <link rel="stylesheet" href="../../shared/css/base/typography.css">
+
     <link rel="stylesheet" href="../css/layout/sidebar.css">
     <link rel="stylesheet" href="../css/layout/header.css">
     <link rel="stylesheet" href="../css/layout/grid.css">
+
     <link rel="stylesheet" href="../../shared/css/components/cards.css">
-    <link rel="stylesheet" href="../../shared/css/components/tables.css">
     <link rel="stylesheet" href="../../shared/css/components/buttons.css">
     <link rel="stylesheet" href="../../shared/css/components/badges.css">
-    <link rel="stylesheet" href="../../shared/css/components/inputs.css">
+    
     <link rel="stylesheet" href="../css/pages/routes.css">
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
-    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 </head>
 <body>
 
     <aside id="sidebar">
         <div class="brand">
-            <button id="sidebarToggle" class="btn-menu"><i class="fa-solid fa-bars"></i></button>
+            <button id="sidebarToggle" class="btn-menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
             <div class="brand-content">
                 <i class="fa-solid fa-layer-group brand-icon"></i> 
-                <span class="brand-text">Trade<span>Force</span></span>
+                <span class="brand-text">Trade<span>Griffus</span></span>
             </div>
         </div>
+
         <div class="user-profile-mini">
             <div class="user-avatar"></div>
-            <div class="user-info"><h4>Matheou S.</h4><p><span class="dot"></span> Gestor</p></div>
+            <div class="user-info">
+                <h4>Matheus S.</h4>
+                <p><span class="dot"></span> Gestor</p>
+            </div>
         </div>
+
         <nav>
             <ul>
                 <div class="nav-category">Principal</div>
                 <li><a href="dashboard.html" class="nav-link"><i class="fa-solid fa-chart-pie"></i> <span class="link-text">Dashboard</span></a></li>
                 <li><a href="#" class="nav-link active"><i class="fa-solid fa-calendar-check"></i> <span class="link-text">Roteiros e Visitas</span></a></li>
                 <li><a href="points-of-sale.html" class="nav-link"><i class="fa-solid fa-map-location-dot"></i> <span class="link-text">Pontos de Venda</span></a></li>
+                
                 <div class="nav-category">Equipe</div>
                 <li><a href="collaborators.html" class="nav-link"><i class="fa-solid fa-users"></i> <span class="link-text">Colaboradores</span></a></li>
-                <li><a href="#" class="nav-link"><i class="fa-solid fa-clipboard-list"></i> <span class="link-text">Pesquisas</span></a></li>
+                <li><a href="surveys.html" class="nav-link"><i class="fa-solid fa-clipboard-list"></i> <span class="link-text">Pesquisas</span></a></li>
+                
                 <div class="nav-category">Gestão</div>
-                <li><a href="#" class="nav-link"><i class="fa-solid fa-file-invoice"></i> <span class="link-text">Relatórios</span></a></li>
-                <li><a href="#" class="nav-link"><i class="fa-solid fa-gear"></i> <span class="link-text">Configurações</span></a></li>
+                <li><a href="reports.html" class="nav-link"><i class="fa-solid fa-file-invoice"></i> <span class="link-text">Relatórios</span></a></li>
+                <li><a href="settings.html" class="nav-link"><i class="fa-solid fa-gear"></i> <span class="link-text">Configurações</span></a></li>
             </ul>
         </nav>
+        
         <div style="margin-top: auto;">
             <a href="#" class="nav-link logout-link"><i class="fa-solid fa-arrow-right-from-bracket"></i> <span class="link-text">Sair</span></a>
         </div>
@@ -63,234 +70,204 @@
     <main>
         <header>
             <div>
-                <h2>Roteiros e Visitas</h2>
-                <p>Gerencie a agenda da equipe e acompanhe o status em tempo real.</p>
+                <h2>Gestão de Roteiros</h2>
+                <p>Organize a agenda da equipe arrastando os cards.</p>
             </div>
             <div class="header-actions">
-                <button class="btn-primary"><i class="fa-solid fa-plus"></i> Criar Roteiro</button>
+                <button class="btn-icon"><i class="fa-regular fa-bell"></i></button>
+                <button class="btn-primary"><i class="fa-solid fa-save"></i> Salvar Alterações</button>
             </div>
         </header>
 
-        <div class="kpi-grid" style="margin-bottom: 1rem;">
-            <div class="card blue-border">
-                <div class="card-header">
-                    <span class="card-title">Roteiros Hoje</span>
-                    <div class="card-icon bg-blue-light"><i class="fa-solid fa-calendar-day"></i></div>
-                </div>
-                <div class="card-value">12</div>
-                <span class="card-stat">Agendados para o dia</span>
-            </div>
-            <div class="card orange-border">
-                <div class="card-header">
-                    <span class="card-title">Iniciados</span>
-                    <div class="card-icon bg-orange-light"><i class="fa-solid fa-person-walking"></i></div>
-                </div>
-                <div class="card-value">5</div>
-                <span class="card-stat stat-up">Em campo agora</span>
-            </div>
-            <div class="card green-border">
-                <div class="card-header">
-                    <span class="card-title">Finalizados</span>
-                    <div class="card-icon bg-green-light"><i class="fa-solid fa-flag-checkered"></i></div>
-                </div>
-                <div class="card-value">3</div>
-                <span class="card-stat">25% do total</span>
-            </div>
-            <div class="card red-border">
-                <div class="card-header">
-                    <span class="card-title">Não Iniciados</span>
-                    <div class="card-icon bg-red-light"><i class="fa-regular fa-clock"></i></div>
-                </div>
-                <div class="card-value">4</div>
-                <span class="card-stat stat-down">Atenção</span>
-            </div>
-        </div>
-
-        <div class="week-filter-container">
-            <button class="nav-week-btn" id="prevWeekBtn"><i class="fa-solid fa-chevron-left"></i></button>
-            <div class="week-days" id="weekDaysContainer">
-                </div>
-            <button class="nav-week-btn" id="nextWeekBtn"><i class="fa-solid fa-chevron-right"></i></button>
-        </div>
-
-        <div class="section-card">
-            <div class="section-header">
-                <h3 class="section-title">Acompanhamento</h3>
-                <button class="btn-text-only" id="clearFilters"><i class="fa-solid fa-eraser"></i> Limpar Filtros</button>
-            </div>
+        <div class="routes-container" id="routesContainer">
             
-            <div class="table-container">
-                <table class="filter-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 25%;">
-                                <div class="th-column">
-                                    <div class="th-top">
-                                        <span>PROMOTOR</span>
-                                        <button class="sort-btn" id="sortNameBtn" title="Ordenar A-Z"><i class="fa-solid fa-sort"></i></button>
-                                    </div>
-                                    <input type="text" class="header-input" id="filterName" placeholder="Buscar nome...">
-                                </div>
-                            </th>
-                            <th style="width: 15%;">
-                                <div class="th-column">
-                                    <span>STATUS</span>
-                                    <select class="header-select" id="filterStatus">
-                                        <option value="all">Todos</option>
-                                        <option value="done">Finalizado</option>
-                                        <option value="pending">Em Rota</option>
-                                        <option value="late">Não Iniciado</option>
-                                    </select>
-                                </div>
-                            </th>
-                            <th style="width: 15%;">
-                                <div class="th-column">
-                                    <span>PROGRESSO</span>
-                                    <select class="header-select" id="filterProgress">
-                                        <option value="all">Todos</option>
-                                        <option value="100">100%</option>
-                                        <option value="50-99">> 50%</option>
-                                        <option value="0-49">< 50%</option>
-                                        <option value="0">0%</option>
-                                    </select>
-                                </div>
-                            </th>
-                            <th style="width: 15%;">
-                                <div class="th-column">
-                                    <span>VISITAS</span>
-                                    <select class="header-select" id="filterVisits">
-                                        <option value="all">Todas</option>
-                                        <option value="high">> 10</option>
-                                        <option value="medium">5 - 10</option>
-                                        <option value="low">< 5</option>
-                                    </select>
-                                </div>
-                            </th>
-                            <th style="width: 15%;">
-                                <div class="th-column">
-                                    <span>ÚLTIMO CHECK-IN</span>
-                                    <select class="header-select" id="sortCheckin">
-                                        <option value="">Padrão</option>
-                                        <option value="recent">Recente</option>
-                                        <option value="oldest">Antigo</option>
-                                    </select>
-                                </div>
-                            </th>
-                            <th style="width: 15%;">AÇÕES</th>
-                        </tr>
-                    </thead>
-                    <tbody id="routesTableBody">
-                        </tbody>
-                </table>
-            </div>
-            
-            <div class="pagination">
-                <span class="pagination-info" id="resultsCount">Mostrando <strong>0</strong> de <strong>0</strong> resultados</span>
-                <div class="pagination-controls">
-                    <button disabled><i class="fa-solid fa-chevron-left"></i></button>
-                    <button class="active">1</button>
-                    <button><i class="fa-solid fa-chevron-right"></i></button>
+            <aside class="promoters-sidebar card" id="promotersSidebar">
+                <div class="sidebar-inner">
+                    <div class="sidebar-header">
+                        <h4>Promotores</h4>
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" placeholder="Buscar...">
+                        </div>
+                    </div>
+
+                    <ul class="promoters-list">
+                        <li class="promoter-item active">
+                            <div class="avatar-circle">AS</div>
+                            <div class="promoter-info"><strong>Andreza Silva</strong><span>Zona Sul - SP</span></div>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </li>
+                        <li class="promoter-item">
+                            <div class="avatar-circle">KR</div>
+                            <div class="promoter-info"><strong>Katia Regina</strong><span>Zona Oeste - SP</span></div>
+                        </li>
+                        <li class="promoter-item">
+                            <div class="avatar-circle">JS</div>
+                            <div class="promoter-info"><strong>João Silva</strong><span>Centro - SP</span></div>
+                        </li>
+                        <li class="promoter-item">
+                            <div class="avatar-circle">AD</div>
+                            <div class="promoter-info"><strong>Ana Dias</strong><span>Zona Norte - SP</span></div>
+                        </li>
+                        <li class="promoter-item">
+                            <div class="avatar-circle">LM</div>
+                            <div class="promoter-info"><strong>Lucas M.</strong><span>Zona Leste - SP</span></div>
+                        </li>
+                    </ul>
                 </div>
-            </div>
+            </aside>
+
+            <section class="schedule-board">
+                <div class="board-controls card">
+                    <div class="selected-user">
+                        <button class="btn-toggle-promoters" title="Alternar Lista">
+                            <i class="fa-solid fa-users"></i>
+                        </button>
+                        <div class="avatar-circle large">AS</div>
+                        <div>
+                            <h3>Andreza Silva</h3>
+                            <span>Zona Sul - SP</span>
+                        </div>
+                    </div>
+                    <div class="date-navigation">
+                        <button class="btn-icon"><i class="fa-solid fa-chevron-left"></i></button>
+                        <span class="current-week">Semana 4 (26/01 - 30/01)</span>
+                        <button class="btn-icon"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <div class="kanban-grid">
+                    
+                    <div class="kanban-column backlog-column">
+                        <div class="column-header">
+                            <span>Carteira <span class="badge">4</span></span>
+                            <i class="fa-solid fa-filter action-icon"></i>
+                        </div>
+                        <div class="search-box small">
+                            <input type="text" placeholder="Buscar PDV...">
+                        </div>
+                        
+                        <div class="kanban-cards">
+                            <div class="task-card">
+                                <div class="card-top"><strong>Carrefour Limão</strong><i class="fa-solid fa-grip-vertical"></i></div>
+                                <p>Av. Otaviano Alves, 100</p>
+                                <span class="status-dot green"></span>
+                            </div>
+                            <div class="task-card">
+                                <div class="card-top"><strong>Extra Freguesia</strong><i class="fa-solid fa-grip-vertical"></i></div>
+                                <p>R. da Balsa, 20</p>
+                                <span class="status-dot red"></span>
+                            </div>
+                            <div class="task-card">
+                                <div class="card-top"><strong>Pão de Açúcar</strong><i class="fa-solid fa-grip-vertical"></i></div>
+                                <p>Av. Real, 90</p>
+                                <span class="status-dot green"></span>
+                            </div>
+                            <div class="task-card">
+                                <div class="card-top"><strong>Walmart Morumbi</strong><i class="fa-solid fa-grip-vertical"></i></div>
+                                <p>Av. Morumbi, 10</p>
+                                <span class="status-dot red"></span>
+                            </div>
+                             <div class="task-card">
+                                <div class="card-top"><strong>Sonda Super</strong><i class="fa-solid fa-grip-vertical"></i></div>
+                                <p>Av. Paulista, 1000</p>
+                                <span class="status-dot green"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="kanban-column day-column">
+                        <div class="column-header">Seg 26/01 <i class="fa-solid fa-ellipsis action-icon"></i></div>
+                        <div class="sub-header">ROTEIRO</div>
+                        <button class="btn-add-dashed">+ PDV</button>
+                        <div class="kanban-dropzone"></div>
+                        
+                        <div class="footer-actions">
+                            <span class="footer-label">PESQUISAS</span>
+                            <button class="btn-dashed-full">+ Pesquisa</button>
+                        </div>
+                    </div>
+
+                    <div class="kanban-column day-column">
+                        <div class="column-header">Ter 27/01 <i class="fa-solid fa-ellipsis action-icon"></i></div>
+                        <div class="sub-header">ROTEIRO</div>
+                        <button class="btn-add-dashed">+ PDV</button>
+                        <div class="kanban-dropzone"></div>
+                        
+                        <div class="footer-actions">
+                            <span class="footer-label">PESQUISAS</span>
+                            <button class="btn-dashed-full">+ Pesquisa</button>
+                        </div>
+                    </div>
+
+                    <div class="kanban-column day-column">
+                        <div class="column-header">Qua 28/01 <i class="fa-solid fa-ellipsis action-icon"></i></div>
+                        <div class="sub-header">ROTEIRO</div>
+                        <button class="btn-add-dashed">+ PDV</button>
+                        <div class="kanban-dropzone"></div>
+                        
+                        <div class="footer-actions">
+                            <span class="footer-label">PESQUISAS</span>
+                            <button class="btn-dashed-full">+ Pesquisa</button>
+                        </div>
+                    </div>
+
+                    <div class="kanban-column day-column">
+                        <div class="column-header">Qui 29/01 <i class="fa-solid fa-ellipsis action-icon"></i></div>
+                        <div class="sub-header">ROTEIRO</div>
+                        <button class="btn-add-dashed">+ PDV</button>
+                        <div class="kanban-dropzone"></div>
+                        
+                        <div class="footer-actions">
+                            <span class="footer-label">PESQUISAS</span>
+                            <button class="btn-dashed-full">+ Pesquisa</button>
+                        </div>
+                    </div>
+
+                    <div class="kanban-column day-column">
+                        <div class="column-header">Sex 30/01 <i class="fa-solid fa-ellipsis action-icon"></i></div>
+                        <div class="sub-header">ROTEIRO</div>
+                        <button class="btn-add-dashed">+ PDV</button>
+                        <div class="kanban-dropzone"></div>
+                        
+                        <div class="footer-actions">
+                            <span class="footer-label">PESQUISAS</span>
+                            <button class="btn-dashed-full">+ Pesquisa</button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
         </div>
     </main>
-
-    <div id="createRouteModal" class="modal-overlay hidden">
-        <div class="modal-container">
-            <div class="modal-left">
-                <div class="modal-header">
-                    <h3>Criar Novo Roteiro</h3>
-                    
-                    <div class="step-indicator">
-                        <div class="step active" id="step1-indicator"></div>
-                        <div class="step-line"></div>
-                        <div class="step" id="step2-indicator"></div>
-                        <div class="step-line"></div>
-                        <div class="step" id="step3-indicator"></div>
-                    </div>
-                    
-                    <p class="step-title" id="stepTitle">Dados Iniciais</p>
-                </div>
-
-                <div class="modal-body">
-                    
-                    <div id="step1-content" class="step-content active">
-                        <div class="form-group">
-                            <label>Data do Roteiro</label>
-                            <input type="date" class="input-field" id="inputDate">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Selecione o Promotor</label>
-                            <div class="search-box-simple">
-                                <i class="fa-solid fa-search"></i>
-                                <input type="text" id="searchPromoter" placeholder="Buscar promotor...">
-                            </div>
-                            <div class="custom-select-list" id="promoterList"></div>
-                            <input type="hidden" id="selectedPromoterId">
-                        </div>
-                    </div>
-
-                    <div id="step2-content" class="step-content">
-                        <div class="form-group">
-                            <label>Selecione os Pontos de Venda</label>
-                            <div class="search-box-simple">
-                                <i class="fa-solid fa-search"></i>
-                                <input type="text" placeholder="Buscar cliente ou endereço..." id="searchPdv">
-                            </div>
-                            
-                            <div class="pdv-list" id="pdvList">
-                                <div class="pdv-item">
-                                    <input type="checkbox" id="pdv1">
-                                    <label for="pdv1"><strong>Supermercado Central</strong><span>Av. Principal, 100</span></label>
-                                </div>
-                                <div class="pdv-item">
-                                    <input type="checkbox" id="pdv2">
-                                    <label for="pdv2"><strong>Mercadinho da Esquina</strong><span>Rua das Flores, 45</span></label>
-                                </div>
-                                <div class="pdv-item">
-                                    <input type="checkbox" id="pdv3">
-                                    <label for="pdv3"><strong>Hiper Extra</strong><span>Rodovia do Sol, Km 5</span></label>
-                                </div>
-                                <div class="pdv-item">
-                                    <input type="checkbox" id="pdv4">
-                                    <label for="pdv4"><strong>Atacadão do Povo</strong><span>Av. Vitória, 200</span></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="step3-content" class="step-content">
-                        <div class="sequence-container">
-                            <div class="sequence-header">
-                                <span><i class="fa-solid fa-list-ol"></i> Definir Ordem de Visita</span>
-                                <small>Arraste para organizar</small>
-                            </div>
-                            <ul id="routeSequenceList" class="sequence-list">
-                                </ul>
-                        </div>
-                        <p style="font-size: 0.8rem; color: #64748b; text-align: center; margin-top: 10px;">
-                            <i class="fa-solid fa-circle-info"></i> O mapa ao lado atualiza conforme a ordem acima.
-                        </p>
-                    </div>
-
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn-text-only" id="btnCancel">Cancelar</button>
-                    <div class="footer-nav">
-                        <button class="btn-secondary hidden" id="btnBack">Voltar</button>
-                        <button class="btn-primary" id="btnNext">Próximo</button>
-                        <button class="btn-primary hidden" id="btnSave">Salvar Roteiro</button>
-                    </div>
-                </div>
+    <div id="mapModal" class="modal-overlay hidden">
+        <div class="modal-content map-content">
+            <div class="modal-header">
+                <h3>Rota do Dia</h3>
+                <button id="closeMapBtn" class="btn-icon-small"><i class="fa-solid fa-times"></i></button>
             </div>
-
-            <div class="modal-right">
-                <div id="mapRoute" style="width: 100%; height: 100%; z-index: 1;"></div>
+            <div class="modal-body-map">
+                <div id="leafletMap"></div>
             </div>
         </div>
     </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <div id="surveyModal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Adicionar Pesquisas</h3>
+            <button id="closeModalBtn" class="btn-icon-small"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <div class="modal-body" id="surveyList">
+            </div>
+        <div class="modal-footer">
+            <button id="cancelModalBtn" class="btn-ghost">Cancelar</button>
+            <button id="confirmModalBtn" class="btn-primary">Adicionar Selecionados</button>
+        </div>
+    </div>
+</div>
 
     <script src="../js/components/sidebar.js"></script>
     <script src="../js/pages/routes.js"></script>
